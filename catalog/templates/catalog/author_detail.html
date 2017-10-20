@@ -2,8 +2,6 @@
 
 {% block content %}
   <h1>Author: {{ author.first_name }} {{ author.last_name }}</h1>
-
-  <p><strong>Author:</strong> <a href="">{{ book.author }}</a></p> <!-- author detail link not yet defined -->
   <p>{{ author.date_of_birth }} - {{ author.date_of_death }}</p>
 
   <div style="margin-left:20px;margin-top:20px">
@@ -11,7 +9,7 @@
 
     {% for book in author.book_set.all %}
     <hr>
-    <p><strong> {{book.title}} </strong> ({{ book.bookinstance_set.count }}) </p>
+    <p><strong> <a href="{% url 'book-detail' book.pk %}"> {{book.title}} </a> </strong> ({{ book.bookinstance_set.count }}) </p>
     <p class="text-muted"> {{book.summary}}</p>
     {% endfor %}
   </div>
