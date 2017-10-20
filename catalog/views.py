@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre, Language
+from django.views import generic
 
 # Create your views here.
 def index(request):
@@ -32,3 +33,34 @@ def index(request):
         'index.html',
         context=CONTEXT
     );
+
+class BookListView(generic.ListView):
+    model = Book;
+    paginate_by = 10;
+
+class BookDetailView(generic.DetailView):
+    model = Book;
+
+class AuthorListView(generic.ListView):
+    model = Author;
+    paginate_by = 10;
+
+class AuthorDetailView(generic.DetailView):
+    model = Author;
+
+# implementation by function
+'''
+def book_detail_view(request,pk):
+    try:
+        book_id=Book.objects.get(pk=pk)
+    except Book.DoesNotExist:
+        raise Http404("Book does not exist")
+
+    #book_id=get_object_or_404(Book, pk=pk)
+    
+    return render(
+        request,
+        'catalog/book_detail.html',
+        context={'book':book_id,}
+    )
+'''

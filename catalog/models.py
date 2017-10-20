@@ -47,6 +47,9 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse('book-detail', args=[str(self.id)]);
 
+    class Meta:
+        ordering = ["title"];
+
 class BookInstance(models.Model):
     """
     Model representing a specific copy of a book (i.e. that can be borrowed from the library).
@@ -92,6 +95,9 @@ class Author(models.Model):
         String for representing the Model object.
         """
         return '%s, %s' % (self.last_name, self.first_name);
+
+    class Meta:
+        ordering = ["first_name"];
 
 class Language(models.Model):
     name = models.CharField(max_length=100, help_text="Enter a language name.");
