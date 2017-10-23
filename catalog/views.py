@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre, Language
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 # Create your views here.
 def index(request):
@@ -69,3 +71,24 @@ def book_detail_view(request,pk):
         context={'book':book_id,}
     )
 '''
+
+class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
+    """
+    Generic class-based view listing books on loan to current user. 
+    """
+    model = BookInstance;
+    template_name = 'catalog/bookinstance_list_borrowed_user.html';
+    paginate_by = 10;
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back');
+
+class LoanedBooksByLabrarianListView(PermissionRequiredMixin, generic.ListView):
+    model = BookInstance;
+    permission_required = 'catalog.can_mark_returned';
+    template_name = 'catalog/bookinstance_list_loaned_librarian.html';
+    paginate_by = 20;
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(status__exact='o').order_by('due_back');
+
